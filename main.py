@@ -1,31 +1,23 @@
+# SPDX-License-Identifier: LGPL-2.1-only
+# Copyright (C) 2024 Akshat Kotpalliwar
+
+#!/usr/bin/env python3
 """
-Main entry point for pygcprofiler CLI
-Copyright (C) 2024  Akshat Kotpalliwar
+pygcprofiler - Main Entry Point
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, see <https://www.gnu.org/licenses/>.
+See Python's garbage collector in action without getting in its way.
 """
 
+from src.gc_monitor.cli import parse_arguments, parse_duration_buckets
+from src.gc_monitor.codegen import generate_monitoring_code
 import sys
 import os
 import subprocess
 import shlex
 
-from .cli import parse_arguments, parse_duration_buckets
-from .codegen import generate_monitoring_code
-
 
 def main():
+    """Main entry point for pygcprofiler"""
     args = parse_arguments()
 
     if not args.command:
@@ -33,10 +25,7 @@ def main():
         sys.exit(1)
 
     if args.command == 'run':
-        # Check if running a module (-m) or a script file
-        is_module = args.script == '-m'
-        
-        if not is_module and not os.path.exists(args.script):
+        if not os.path.exists(args.script):
             print(f"Error: Script file not found: {args.script}", file=sys.stderr)
             sys.exit(1)
 
