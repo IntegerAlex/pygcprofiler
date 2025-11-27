@@ -36,6 +36,18 @@ def main():
         print("       pygcprofiler run -m <module> [args...]", file=sys.stderr)
         sys.exit(1)
 
+    if args.command == 'dashboard':
+        try:
+            from .dashboard.server import start_server
+            start_server(host=args.host, http_port=args.port, udp_port=args.udp_port)
+        except ImportError:
+            print("Error: Dashboard dependencies not found.", file=sys.stderr)
+            print("Please install with: pip install fastapi uvicorn", file=sys.stderr)
+            sys.exit(1)
+        except KeyboardInterrupt:
+            sys.exit(0)
+        return
+
     if args.command == 'run':
         # Check if running a module (-m) or a script file
         is_module = args.script == '-m'
@@ -65,7 +77,10 @@ def main():
             duration_buckets=duration_buckets or None,
             terminal_flamegraph=args.terminal_flamegraph,
             terminal_flamegraph_width=args.terminal_flamegraph_width,
-            terminal_flamegraph_color=args.terminal_flamegraph_color
+            terminal_flamegraph_color=args.terminal_flamegraph_color,
+            live_monitoring=args.live,
+            live_host=args.live_host,
+            live_port=args.live_port
         )
 
         # Prepare the command to run Python with our monitoring code

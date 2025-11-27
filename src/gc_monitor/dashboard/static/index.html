@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GC Monitor Live</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header>
+        <h1>GC Monitor Live</h1>
+        <div class="status" id="connectionStatus">
+            <div class="status-dot"></div>
+            <span>Connecting...</span>
+        </div>
+    </header>
+
+    <div class="grid">
+        <div class="card">
+            <span class="card-label">Total Collections</span>
+            <span class="card-value" id="totalCollections">0</span>
+        </div>
+        <div class="card">
+            <span class="card-label">Avg Duration</span>
+            <span class="card-value" id="avgDuration">0.0 ms</span>
+        </div>
+        <div class="card">
+            <span class="card-label">Max Pause</span>
+            <span class="card-value" id="maxPause">0.0 ms</span>
+        </div>
+        <div class="card">
+            <span class="card-label">Last Gen</span>
+            <span class="card-value" id="lastGen">-</span>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <canvas id="gcChart"></canvas>
+    </div>
+
+    <div class="alert-box" id="alertBox">
+        High GC Pause Detected!
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
