@@ -16,6 +16,37 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, see <https://www.gnu.org/licenses/>.
 
 See Python's garbage collector in action without getting in its way.
+
+Zero Runtime Overhead Design:
+- Callback only records timestamps and counters (no I/O, no memory checks)
+- Uses time.perf_counter() for high-precision, low-overhead timing
+- All output is buffered and written only at shutdown
+- No gc.get_objects() or memory measurement during runtime
+
+Example usage:
+    # CLI
+    $ pygcprofiler run your_script.py
+    $ gc-monitor run -m uvicorn main:app
+
+    # Programmatic
+    from gc_monitor import GCMonitor
+    
+    monitor = GCMonitor(alert_threshold_ms=100.0)
+    # ... your application code ...
+    monitor.stop_monitoring()
 """
 
 __version__ = "0.1.0"
+__author__ = "Akshat Kotpalliwar"
+__license__ = "LGPL-2.1-only"
+
+from .monitor import GCMonitor
+from .stats import GCStatistics
+from .logging import GCLogger
+
+__all__ = [
+    "GCMonitor",
+    "GCStatistics", 
+    "GCLogger",
+    "__version__",
+]
