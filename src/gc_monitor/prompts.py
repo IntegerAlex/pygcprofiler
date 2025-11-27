@@ -1,27 +1,17 @@
+# SPDX-License-Identifier: LGPL-2.1-only
+# Copyright (C) 2024 Akshat Kotpalliwar
 """
-AI prompt generation helpers for pygcprofiler
-Copyright (C) 2024  Akshat Kotpalliwar
+AI prompt generation helpers for pygcprofiler.
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, see <https://www.gnu.org/licenses/>.
+This module provides backward-compatible functions that delegate
+to the new modular prompt system in gc_monitor.prompts package.
 """
 
 from __future__ import annotations
 
-import gc
-import time
 from typing import Any, Dict, List
 
+from .prompts import PromptBuilder
 from .stats import GCStatistics
 
 
@@ -32,32 +22,51 @@ def build_ai_prompt(
     recommendations: List[str],
     start_time: float,
 ) -> str:
-    """Construct a concise optimization prompt for AI copilots."""
-    totals = stats.stats
-    runtime = max(time.time() - start_time, 1)
-    current_thresholds = gc.get_threshold()
-    cpu_usage = (totals['total_duration_ms']/1000)/runtime*100
+    """
+    Construct a concise optimization prompt for AI copilots.
     
-    # Find slow GC events with locations
-    slow_events = [e for e in gc_events if e.get('duration_ms', 0) >= 10 and 'location' in e]
-    locations = []
-    if slow_events:
-        # Get unique locations from slowest events
-        sorted_events = sorted(slow_events, key=lambda x: x.get('duration_ms', 0), reverse=True)
-        seen_locs = set()
-        for event in sorted_events[:3]:  # Top 3 locations
-            loc = event.get('location', '')
-            if loc and loc not in seen_locs:
-                locations.append(loc)
-                seen_locs.add(loc)
-    
-    loc_text = f" Slow GC at: {', '.join(locations)}." if locations else ""
-    
-    prompt = (
-        f"Optimize Python GC: {totals['total_collections']} collections over {runtime:.1f}s, "
-        f"max pause {totals['max_duration_ms']:.1f}ms, {cpu_usage:.1f}% CPU, thresholds {current_thresholds}.{loc_text} "
-        f"Provide gc.freeze() and threshold tuning code with specific values, expected impact, and validation."
-    )
-    
-    return prompt
+    This is a backward-compatible wrapper around the new PromptBuilder.
+    For more control, use PromptBuilder directly.
+    """
+    # Convert dict events to tuples if needed (for compatibility)
+    tuple_events = []
+    for e in gc_events:
+        if isinstance(e, dict):
+            tuple_events.append((
+                e.get('timestamp', 0) - start_time,
+                e.get('generation', 0),
+                e.get('duration_ms', 0),
+                e.get('collected', 0),
+                e.get('uncollectable', 0),
+            ))
+        else:
+            tuple_events.append(e)
 
+    builder = PromptBuilder(
+        stats=stats,
+        events=tuple_events,
+        start_time=start_time,
+    )
+
+    # Return compact prompt for backward compatibility
+    return builder.build_compact()
+
+
+def build_full_prompt(
+    stats: GCStatistics,
+    events: List,
+    start_time: float,
+    alert_threshold_ms: float = 50.0,
+) -> str:
+    """
+    Build a comprehensive AI prompt with full context.
+    
+    This is the recommended function for generating detailed prompts.
+    """
+    builder = PromptBuilder(
+        stats=stats,
+        events=events,
+        start_time=start_time,
+        alert_threshold_ms=alert_threshold_ms,
+    )
+    return builder.build()

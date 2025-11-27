@@ -432,103 +432,13 @@ class GCMonitor:
         return blunders, recommendations
 
     def _generate_ai_prompt(self, blunders, recommendations):
-        """Generate a comprehensive prompt for AI agents to fix GC issues"""
-        current_thresholds = gc.get_threshold()
-        current_counts = gc.get_count()
-        summary = self.stats.get_summary_stats()
-        totals = self.stats.stats
-        runtime = max(time.time() - self.start_time, 1)
-        
-        issue_lines = [
-            f"• [{issue['severity'].upper()}] {issue['type'].replace('_', ' ').title()}: {issue['metric']} - {issue['impact']}"
-            for issue in blunders
-        ] or ["• None detected during this interval."]
-        recommendation_lines = [f"• {rec}" for rec in recommendations] or ["• Collect more data to produce actionable insights."]
+        """Generate a comprehensive prompt for AI agents to fix GC issues."""
+        from .prompts import PromptBuilder
 
-        total_uncollectable = sum(event[_SLOT_UNCOLLECTABLE] for event in self._event_buffer)
-
-        return f"""
-
-🔧 PYTHON GC PERFORMANCE OPTIMIZATION REQUEST
-
-I'm experiencing significant performance issues with Python's garbage collector in a production web application. Please provide specific, actionable optimization strategies.
-
-📊 CURRENT GC METRICS (collected over {runtime:.1f} seconds):
-
-• Total GC Collections: {summary['total_collections']}
-
-• Generation Breakdown:
-  - Gen 0: {summary['collections_by_generation'].get(0, 0)} collections
-  - Gen 1: {summary['collections_by_generation'].get(1, 0)} collections
-  - Gen 2: {summary['collections_by_generation'].get(2, 0)} collections
-
-• Performance Impact:
-  - Max GC Pause: {summary['max_duration']:.1f}ms
-  - Total GC Time: {summary['total_gc_time']/1000:.2f}s
-  - CPU Usage by GC: {(totals['total_duration_ms']/1000)/runtime*100:.1f}%
-
-• Current GC Thresholds: {current_thresholds}
-
-• Current Object Counts: {current_counts}
-
-• Uncollectable Objects Found: {total_uncollectable}
-
-🚨 DETECTED ISSUES:
-
-{chr(10).join(issue_lines)}
-
-💡 RECOMMENDATIONS TO CONSIDER:
-
-{chr(10).join(recommendation_lines)}
-
-🎯 APPLICATION CONTEXT:
-
-- This is a web application (likely Django/FastAPI/Flask) handling HTTP requests
-- We cannot modify the core application code extensively
-- We need solutions that can be applied at startup/initialization
-- The goal is to reduce p95 latency and improve overall throughput
-- We're using standard CPython (not PyPy or other implementations)
-
-🔧 SPECIFIC OPTIMIZATION REQUESTS:
-
-1. Provide EXACT code snippets to place at application startup that will:
-   - Freeze initialization objects to prevent them from being scanned in Gen 2
-   - Set optimal GC thresholds based on our metrics
-   - Add minimal-overhead monitoring for production
-
-2. For each recommendation, explain:
-   - WHY it will help our specific metrics
-   - WHAT the expected performance improvement will be
-   - ANY potential risks or trade-offs
-   - HOW to validate the improvement
-
-3. Include production-ready monitoring code that can be integrated with OpenTelemetry or similar observability tools.
-
-4. If applicable, provide strategies to identify and fix the root causes of uncollectable objects.
-
-🚀 FORMAT REQUIREMENTS:
-
-- Provide ready-to-copy code blocks with proper error handling
-- Include comments explaining each optimization
-- Give specific threshold values based on our metrics (don't use placeholders)
-- Prioritize solutions that can be deployed immediately with minimal risk
-- Include rollback strategies if optimizations cause issues
-
-Example of the type of code we need at startup:
-
-```python
-import gc
-
-# Optimization 1: Clean up and freeze startup objects
-gc.collect(2)  # Full collection of all generations
-gc.freeze()    # Move all tracked objects to permanent generation
-
-# Optimization 2: Set aggressive thresholds based on our workload
-current_gen1, current_gen2 = gc.get_threshold()[1:]
-# OUR SPECIFIC THRESHOLDS BASED ON METRICS:
-gc.set_threshold(50000, current_gen1, current_gen2)  # Dramatically reduce collection frequency
-
-print(f"GMEM GC optimized: thresholds set to {{gc.get_threshold()}}, {{gc.get_freeze_count()}} objects frozen")
-```
-
-"""
+        builder = PromptBuilder(
+            stats=self.stats,
+            events=self._event_buffer,
+            start_time=self.start_time,
+            alert_threshold_ms=self.alert_threshold_ms,
+        )
+        return builder.build()

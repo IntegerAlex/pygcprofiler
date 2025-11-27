@@ -198,9 +198,9 @@ def create_monitoring_code(
             """Log GC event - ONLY at shutdown"""
             if self.json_output:
                 output = json.dumps(event_data, indent=2 if event_data.get('phase') == 'stop' else None)
-            else:
-                duration_str = self._format_duration(event_data['duration_ms'])
-                output = f"GMEM GC STOP  | Gen: {{event_data['generation']}} | Duration: {{duration_str}} | Collected: {{event_data.get('collected', 0)}} | Uncollectable: {{event_data.get('uncollectable', 0)}}"
+                else:
+                    duration_str = self._format_duration(event_data['duration_ms'])
+                    output = f"GMEM GC STOP  | Gen: {{event_data['generation']}} | Duration: {{duration_str}} | Collected: {{event_data.get('collected', 0)}} | Uncollectable: {{event_data.get('uncollectable', 0)}}"
             
             self._log_message(output)
         
@@ -531,10 +531,10 @@ def create_monitoring_code(
         else:
             # Script file mode: python script.py
             script_path = first_arg
-            script_dir = os.path.dirname(os.path.abspath(script_path))
+        script_dir = os.path.dirname(os.path.abspath(script_path))
             if script_dir and script_dir not in sys.path:
-                sys.path.insert(0, script_dir)
-            
+            sys.path.insert(0, script_dir)
+        
             sys.argv = [script_path] + script_args
             # Use runpy to execute the script as if it were run directly
             runpy.run_path(script_path, run_name="__main__")
