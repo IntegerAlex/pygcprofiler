@@ -50,21 +50,54 @@ def generate_monitoring_code(**config):
 
         print("GMEM Monitoring initialized", file=sys.stderr)
         monitor = GCMonitor(**monitor_config)
+        
+        # Register signal handler for long-running processes (e.g., uvicorn/gunicorn)
+        # This allows showing stats on SIGUSR1 without stopping the server
+        import signal
+        def show_stats_handler(signum, frame):
+            try:
+                if hasattr(monitor, 'stats'):
+                    summary = monitor.stats.get_summary_stats()
+                    print("\\n=== GC STATS (SIGUSR1) ===", file=sys.stderr)
+                    print(f"Collections: {{summary['total_collections']}}, "
+                          f"Max pause: {{summary['max_duration']:.1f}}ms, "
+                          f"Avg: {{summary['average_duration']:.1f}}ms", file=sys.stderr)
+            except Exception:
+                pass  # Ignore errors in signal handler
+        
+        try:
+            signal.signal(signal.SIGUSR1, show_stats_handler)
+        except (AttributeError, ValueError):
+            # SIGUSR1 not available on Windows
+            pass
 
         try:
-            script_path = sys.argv[1]
+            first_arg = sys.argv[1]
             script_args = sys.argv[2:]
-
-            script_dir = os.path.dirname(os.path.abspath(script_path))
-            if script_dir and script_dir not in sys.path:
-                sys.path.insert(0, script_dir)
-
-            sys.argv = [script_path] + script_args
-
-            # Use runpy to execute the script as if it were run directly
-            # This preserves __name__ == "__main__" behavior
+            
             import runpy
-            runpy.run_path(script_path, run_name="__main__")
+            
+            # Check if running a module (-m) or a script file
+            if first_arg == '-m':
+                # Module mode: python -m uvicorn app:app
+                if not script_args:
+                    print("GMEM Error: Module name required after -m", file=sys.stderr)
+                    sys.exit(1)
+                module_name = script_args[0]
+                module_args = script_args[1:]
+                sys.argv = ['-m', module_name] + module_args
+                runpy.run_module(module_name, run_name="__main__")
+            else:
+                # Script file mode: python script.py
+                script_path = first_arg
+                script_dir = os.path.dirname(os.path.abspath(script_path))
+                if script_dir and script_dir not in sys.path:
+                    sys.path.insert(0, script_dir)
+                
+                sys.argv = [script_path] + script_args
+                # Use runpy to execute the script as if it were run directly
+                # This preserves __name__ == "__main__" behavior
+                runpy.run_path(script_path, run_name="__main__")
         except Exception as exc:  # noqa: BLE001
             print(f"GMEM Error running script: {{exc}}", file=sys.stderr)
             traceback.print_exc()
