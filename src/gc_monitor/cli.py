@@ -19,6 +19,8 @@ Examples:
   pygcprofiler run my_script.py
   pygcprofiler run server.py --interval 2 --terminal-flamegraph
   pygcprofiler run app.py --alert-threshold-ms 100 --dump-objects
+  pygcprofiler run -m uvicorn app:app --host 0.0.0.0 --port 8000
+  pygcprofiler run -m gunicorn app:app --workers 4
         '''
     )
 

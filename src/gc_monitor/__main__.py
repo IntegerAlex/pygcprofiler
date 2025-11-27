@@ -22,7 +22,10 @@ def main():
         sys.exit(1)
 
     if args.command == 'run':
-        if not os.path.exists(args.script):
+        # Check if running a module (-m) or a script file
+        is_module = args.script == '-m'
+        
+        if not is_module and not os.path.exists(args.script):
             print(f"Error: Script file not found: {args.script}", file=sys.stderr)
             sys.exit(1)
 

@@ -9,6 +9,7 @@ import gc
 import time
 import os
 import sys
+import traceback
 from collections import defaultdict, deque
 
 from .logging import GCLogger
@@ -128,6 +129,15 @@ class GCMonitor:
                 'collected': collected,
                 'uncollectable': uncollectable
             }
+
+            # Capture location for slow collections
+            if duration_ms >= self.alert_threshold_ms:
+                stack = traceback.extract_stack()
+                # Skip the last few frames (GC callback, monitor internals)
+                for frame in reversed(stack[:-3]):
+                    if 'gc_monitor' not in frame.filename and 'gc.py' not in frame.filename:
+                        event_data['location'] = f"{frame.filename}:{frame.lineno} in {frame.name}"
+                        break
 
             if not self.stats_only:
                 event_data['memory_before'] = start_info['memory']
