@@ -1,15 +1,15 @@
 [project]
 name = "pygcprofiler"
-version = "0.1.0"
+version = "0.2.0"
 description = "See Python's garbage collector in action without getting in its way. Zero-overhead GC monitoring for production applications."
 readme = "README.md"
 license = "LGPL-2.1-only"
 requires-python = ">=3.12"
 authors = [
-    { name = "Akshat Kotpalliwar" }
+    { name = "Akshat Kotpalliwar" , email = "akshatkot@gmail.com" }
 ]
 maintainers = [
-    { name = "Akshat Kotpalliwar" }
+    { name = "Akshat Kotpalliwar" , email = "akshatkot@gmail.com" }
 ]
 keywords = [
     "garbage-collection",
@@ -49,11 +49,11 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/AkshatKotpalliwar/pygcprofiler"
-Documentation = "https://github.com/AkshatKotpalliwar/pygcprofiler#readme"
-Repository = "https://github.com/AkshatKotpalliwar/pygcprofiler.git"
-Issues = "https://github.com/AkshatKotpalliwar/pygcprofiler/issues"
-Changelog = "https://github.com/AkshatKotpalliwar/pygcprofiler/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/IntegerAlex/pygcprofiler"
+Documentation = "https://github.com/IntegerAlex/pygcprofiler#readme"
+Repository = "https://github.com/IntegerAlex/pygcprofiler.git"
+Issues = "https://github.com/IntegerAlex/pygcprofiler/issues"
+Changelog = "https://github.com/IntegerAlex/pygcprofiler/blob/main/CHANGELOG.md"
 
 [project.scripts]
 pygcprofiler = "gc_monitor.__main__:main"

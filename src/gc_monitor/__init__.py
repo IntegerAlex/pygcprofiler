@@ -1,6 +1,6 @@
 """
 pygcprofiler - Python Garbage Collection Profiling Tool
-Copyright (C) 2024  Akshat Kotpalliwar
+Copyright (C) 2024  Akshat Kotpalliwar alias IntegerAlex
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -37,7 +37,7 @@ Example usage:
 """
 
 __version__ = "0.1.0"
-__author__ = "Akshat Kotpalliwar"
+__author__ = "Akshat Kotpalliwar alias IntegerAlex"
 __license__ = "LGPL-2.1-only"
 
 from .monitor import GCMonitor
