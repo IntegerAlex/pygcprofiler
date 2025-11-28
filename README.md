@@ -1,7 +1,7 @@
 # pygcprofiler
 
 [![PyPI version](https://img.shields.io/pypi/v/pygcprofiler.svg)](https://pypi.org/project/pygcprofiler/)
-[![PyPI downloads](https://img.shields.io/pypi/dy/pygcprofiler.svg)](https://pypi.org/project/pygcprofiler/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/pygcprofiler.svg)](https://pypi.org/project/pygcprofiler/)
 [![PyPI - Monthly Downloads](https://img.shields.io/pypi/dm/pygcprofiler?label=downloads%2Fmonth)](https://pypi.org/project/pygcprofiler/)
 [![License: LGPL v2.1](https://img.shields.io/badge/License-LGPL_v2.1-blue.svg)](https://www.gnu.org/licenses/lgpl-2.1)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
