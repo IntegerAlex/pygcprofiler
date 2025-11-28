@@ -93,6 +93,31 @@ def main():
 
         print(f"GMEM Running: {' '.join(shlex.quote(arg) for arg in cmd[:4])}...", file=sys.stderr)
 
+        # Optional: auto-start dashboard when live monitoring is enabled
+        dashboard_proc = None
+        if args.live:
+            try:
+                dashboard_cmd = [
+                    sys.executable,
+                    "-m",
+                    "gc_monitor",
+                    "dashboard",
+                    "--host",
+                    args.live_host,
+                    "--udp-port",
+                    str(args.live_port),
+                    "--port",
+                    str(8000),
+                ]
+                dashboard_proc = subprocess.Popen(dashboard_cmd)
+                print(
+                    f"GMEM Dashboard auto-started at http://{args.live_host}:8000 "
+                    f"(UDP {args.live_host}:{args.live_port})",
+                    file=sys.stderr,
+                )
+            except Exception as e:  # pragma: no cover - best-effort
+                print(f"GMEM Warning: Failed to auto-start dashboard: {e}", file=sys.stderr)
+
         # Track the subprocess for signal forwarding
         process = None
         
@@ -118,9 +143,10 @@ def main():
             if process is not None:
                 try:
                     process.terminate()
-                    process.wait(timeout=5)
-                except subprocess.TimeoutExpired:
-                    process.kill()
+                    try:
+                        process.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        process.kill()
                 except (ProcessLookupError, OSError):
                     pass
             sys.exit(130)  # Standard exit code for SIGINT
@@ -128,6 +154,19 @@ def main():
             # Restore original signal handlers
             signal.signal(signal.SIGINT, original_sigint)
             signal.signal(signal.SIGTERM, original_sigterm)
+
+            # Stop auto-started dashboard if it's still running
+            if dashboard_proc is not None:
+                try:
+                    if dashboard_proc.poll() is None:
+                        dashboard_proc.terminate()
+                        try:
+                            dashboard_proc.wait(timeout=5)
+                        except (subprocess.TimeoutExpired, KeyboardInterrupt):
+                            dashboard_proc.kill()
+                except Exception:
+                    # Best-effort cleanup; ignoring errors here prevents masking original exit causes
+                    pass
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 [project]
 name = "pygcprofiler"
-version = "0.2.0"
+version = "0.3.0"
 description = "See Python's garbage collector in action without getting in its way. Zero-overhead GC monitoring for production applications."
 readme = "README.md"
 license = "LGPL-2.1-only"
@@ -37,7 +37,6 @@ classifiers = [
 ]
 dependencies = [
     "psutil>=5.9.0",
-    "pytest>=9.0.1",
 ]
 
 [project.optional-dependencies]
@@ -46,6 +45,12 @@ dev = [
     "pytest-cov>=4.0.0",
     "ruff>=0.4.0",
     "mypy>=1.10.0",
+]
+dashboard = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "httpx>=0.25.0",
+    "pytest-asyncio>=0.21.0",
 ]
 
 [project.urls]
@@ -81,6 +86,7 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
 addopts = "-v --tb=short"
+asyncio_mode = "auto"
 
 [tool.ruff]
 line-length = 120

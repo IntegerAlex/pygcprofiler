@@ -84,6 +84,32 @@ def main():
         ] + args.script_args
         
         print(f"GMEM Running: {' '.join(shlex.quote(arg) for arg in cmd)}", file=sys.stderr)
+
+        # Optional: auto-start dashboard when live monitoring is enabled
+        dashboard_proc = None
+        if args.live:
+            try:
+                http_port = os.environ.get("PYGCPROFILER_DASHBOARD_PORT", "8000")
+                dashboard_cmd = [
+                    sys.executable,
+                    "-m",
+                    "gc_monitor",
+                    "dashboard",
+                    "--host",
+                    args.live_host,
+                    "--udp-port",
+                    str(args.live_port),
+                    "--port",
+                    http_port,
+                ]
+                dashboard_proc = subprocess.Popen(dashboard_cmd)
+                print(
+                    f"GMEM Dashboard auto-started at http://{args.live_host}:{http_port} "
+                    f"(UDP {args.live_host}:{args.live_port})",
+                    file=sys.stderr,
+                )
+            except Exception as e:  # pragma: no cover - best-effort
+                print(f"GMEM Warning: Failed to auto-start dashboard: {e}", file=sys.stderr)
         
         try:
             # Run the command
@@ -92,4 +118,17 @@ def main():
         except KeyboardInterrupt:
             print("\nGMEM Monitoring interrupted by user", file=sys.stderr)
             sys.exit(130)  # Standard exit code for interrupted processes
+        finally:
+            # Stop auto-started dashboard if it's still running
+            if dashboard_proc is not None:
+                try:
+                    if dashboard_proc.poll() is None:
+                        dashboard_proc.terminate()
+                        try:
+                            dashboard_proc.wait(timeout=5)
+                        except (subprocess.TimeoutExpired, KeyboardInterrupt):
+                            dashboard_proc.kill()
+                except Exception:
+                    # Best-effort cleanup; ignoring errors here prevents masking original exit causes
+                    pass
 
