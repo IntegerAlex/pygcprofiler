@@ -1,7 +1,14 @@
 # pygcprofiler
 
+[![PyPI version](https://img.shields.io/pypi/v/pygcprofiler.svg)](https://pypi.org/project/pygcprofiler/)
+[![PyPI downloads](https://img.shields.io/pypi/dy/pygcprofiler.svg)](https://pypi.org/project/pygcprofiler/)
+[![PyPI - Monthly Downloads](https://img.shields.io/pypi/dm/pygcprofiler?label=downloads%2Fmonth)](https://pypi.org/project/pygcprofiler/)
 [![License: LGPL v2.1](https://img.shields.io/badge/License-LGPL_v2.1-blue.svg)](https://www.gnu.org/licenses/lgpl-2.1)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![GitHub stars](https://img.shields.io/github/stars/IntegerAlex/pygcprofiler.svg?style=social&label=Star)](https://github.com/IntegerAlex/pygcprofiler)
+[![GitHub forks](https://img.shields.io/github/forks/IntegerAlex/pygcprofiler.svg?style=social&label=Fork)](https://github.com/IntegerAlex/pygcprofiler)
+[![GitHub issues](https://img.shields.io/github/issues/IntegerAlex/pygcprofiler.svg)](https://github.com/IntegerAlex/pygcprofiler/issues)
+[![GitHub license](https://img.shields.io/github/license/IntegerAlex/pygcprofiler.svg)](https://github.com/IntegerAlex/pygcprofiler/blob/main/LICENSE)
 
 **See Python's garbage collector in action without getting in its way.**
 
@@ -293,7 +300,7 @@ src/gc_monitor/
 
 ```bash
 # Clone the repository
-git clone https://github.com/AkshatKotpalliwar/pygcprofiler.git
+git clone https://github.com/IntegerAlex/pygcprofiler.git
 cd pygcprofiler
 
 # Install with dev dependencies
