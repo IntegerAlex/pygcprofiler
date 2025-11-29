@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.4] - 2025-11-29
+
+### Changed
+
+- Enforced CLI flag ordering so all monitoring flags (`--live`, `--interval`, `--stats-only`, etc.) must come **before** the script path:
+  - `pygcprofiler run --flag --flag test.py [script flags/args...]`
+  - `gc-util.py run --flag --flag test.py [script flags/args...]`
+- Added clear error messaging when monitoring flags are mistakenly placed after the script/module arguments.
+
 ## [0.3.3] - 2025-11-29
 
 ### Changed
@@ -107,7 +116,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 3. Create git tag: `git tag -s vX.Y.Z -m "Release vX.Y.Z"`
 4. Build and publish: `python -m build && twine upload dist/*`
 
-[Unreleased]: https://github.com/AkshatKotpalliwar/pygcprofiler/compare/v0.3.3...HEAD
+[Unreleased]: https://github.com/AkshatKotpalliwar/pygcprofiler/compare/v0.3.4...HEAD
+[0.3.4]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.3.4
 [0.3.3]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.3.3
 [0.3.0]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.3.0
 [0.1.0]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.1.0
