@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.3] - 2025-11-29
+
+### Changed
+
+- Improved CLI UX:
+  - Added GNU gdb–style banner (name/author/license) on successful `pygcprofiler run …` and `gc-util.py run …`.
+  - When invoked without subcommands, both `pygcprofiler` and `gc-util.py` now print a concise banner plus usage instead of a bare error.
+- Cleaned up CLI logging:
+  - Stopped printing the full injected `python -c "<monitoring_code>"` command; only a short `GMEM Running: <python> <script> …` line is shown.
 
 ## [0.3.0] - 2025-11-28
 
@@ -95,10 +104,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 1. Update version in `pyproject.toml` and `src/gc_monitor/__init__.py`
 2. Update this CHANGELOG with release date
-3. Create git tag: `git tag -s v0.1.0 -m "Release v0.1.0"`
+3. Create git tag: `git tag -s vX.Y.Z -m "Release vX.Y.Z"`
 4. Build and publish: `python -m build && twine upload dist/*`
 
-[Unreleased]: https://github.com/AkshatKotpalliwar/pygcprofiler/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/AkshatKotpalliwar/pygcprofiler/compare/v0.3.3...HEAD
+[0.3.3]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.3.3
 [0.3.0]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.3.0
 [0.1.0]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.1.0
 

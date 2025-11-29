@@ -14,7 +14,18 @@ def main():
     args = parse_arguments()
     
     if not args.command:
-        print("Error: No command specified. Use 'run' or 'dashboard'", file=sys.stderr)
+        # Friendly banner + usage when invoked without a subcommand
+        print("pygcprofiler - See Python's garbage collector in action without getting in its way.", file=sys.stderr)
+        print("Author: Akshat Kotpalliwar", file=sys.stderr)
+        print("License: LGPL-2.1-only", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("Usage:", file=sys.stderr)
+        print("  gc-util.py run <script.py> [args...]", file=sys.stderr)
+        print("  gc-util.py run -m <module> [args...]", file=sys.stderr)
+        print("  gc-util.py dashboard [--host HOST] [--port PORT] [--udp-port UDP_PORT]", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("For help on options:", file=sys.stderr)
+        print("  gc-util.py --help", file=sys.stderr)
         sys.exit(1)
     
     if args.command == 'dashboard':
@@ -30,6 +41,11 @@ def main():
         return
     
     if args.command == 'run':
+        # Friendly banner on successful invocations, similar to tools like gdb.
+        print("pygcprofiler - See Python's garbage collector in action without getting in its way.", file=sys.stderr)
+        print("Author: Akshat Kotpalliwar | License: LGPL-2.1-only", file=sys.stderr)
+        print("", file=sys.stderr)
+
         # Check if --live was accidentally passed as a script argument
         if '--live' in args.script_args:
             print("Warning: --live flag should come before the script name.", file=sys.stderr)
@@ -82,8 +98,12 @@ def main():
             monitoring_code,
             args.script
         ] + args.script_args
-        
-        print(f"GMEM Running: {' '.join(shlex.quote(arg) for arg in cmd)}", file=sys.stderr)
+
+        # Do NOT print the injected monitoring code. Show only a concise view
+        # of what the user cares about: their Python executable + script.
+        visible_cmd = [sys.executable, args.script] + args.script_args
+        printable = " ".join(shlex.quote(arg) for arg in visible_cmd)
+        print(f"GMEM Running: {printable}", file=sys.stderr)
 
         # Optional: auto-start dashboard when live monitoring is enabled
         dashboard_proc = None

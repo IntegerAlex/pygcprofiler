@@ -31,9 +31,17 @@ def main():
     args = parse_arguments()
 
     if not args.command:
-        print("Error: No command specified. Use 'run'", file=sys.stderr)
-        print("Usage: pygcprofiler run <script.py> [args...]", file=sys.stderr)
-        print("       pygcprofiler run -m <module> [args...]", file=sys.stderr)
+        # Friendly banner + usage when invoked without a subcommand
+        print("pygcprofiler - See Python's garbage collector in action without getting in its way.", file=sys.stderr)
+        print("Author: Akshat Kotpalliwar", file=sys.stderr)
+        print("License: LGPL-2.1-only", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("Usage:", file=sys.stderr)
+        print("  pygcprofiler run <script.py> [args...]", file=sys.stderr)
+        print("  pygcprofiler run -m <module> [args...]", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("For help on options:", file=sys.stderr)
+        print("  pygcprofiler --help", file=sys.stderr)
         sys.exit(1)
 
     if args.command == 'dashboard':
@@ -49,6 +57,11 @@ def main():
         return
 
     if args.command == 'run':
+        # Friendly banner on successful invocations, similar to tools like gdb.
+        print("pygcprofiler - See Python's garbage collector in action without getting in its way.", file=sys.stderr)
+        print("Author: Akshat Kotpalliwar | License: LGPL-2.1-only", file=sys.stderr)
+        print("", file=sys.stderr)
+
         # Check if running a module (-m) or a script file
         is_module = args.script == '-m'
         
@@ -91,7 +104,11 @@ def main():
             args.script
         ] + args.script_args
 
-        print(f"GMEM Running: {' '.join(shlex.quote(arg) for arg in cmd[:4])}...", file=sys.stderr)
+        # Do NOT dump the entire injected monitoring code to the terminal;
+        # just show a concise, user-friendly message.
+        display_cmd = [sys.executable, args.script] + args.script_args
+        printable = " ".join(shlex.quote(arg) for arg in display_cmd)
+        print(f"GMEM Running: {printable}", file=sys.stderr)
 
         # Optional: auto-start dashboard when live monitoring is enabled
         dashboard_proc = None
