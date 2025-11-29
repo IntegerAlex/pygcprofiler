@@ -62,6 +62,43 @@ def main():
         print("Author: Akshat Kotpalliwar | License: LGPL-2.1-only", file=sys.stderr)
         print("", file=sys.stderr)
 
+        # Enforce flag ordering: all pygcprofiler flags must appear BEFORE the script.
+        tool_flags = {
+            "--interval",
+            "--json",
+            "--stats-only",
+            "--dump-objects",
+            "--dump-garbage",
+            "--log-file",
+            "--alert-threshold-ms",
+            "--flamegraph-file",
+            "--flamegraph-bucket",
+            "--duration-buckets",
+            "--terminal-flamegraph",
+            "--terminal-flamegraph-width",
+            "--terminal-flamegraph-color",
+            "--live",
+            "--live-host",
+            "--live-port",
+        }
+        misplaced = []
+        for arg in args.script_args:
+            if not arg.startswith("--"):
+                continue
+            for flag in tool_flags:
+                if arg == flag or arg.startswith(flag + "="):
+                    misplaced.append(arg)
+                    break
+        if misplaced:
+            print("Error: pygcprofiler flags must appear before the script path.", file=sys.stderr)
+            print("Current invocation mixes pygcprofiler flags with script/module flags:", file=sys.stderr)
+            print(f"  Misplaced: {' '.join(misplaced)}", file=sys.stderr)
+            print("", file=sys.stderr)
+            print("Correct examples:", file=sys.stderr)
+            print("  pygcprofiler run --live --interval 1.0 test.py --your-script-flag --arg", file=sys.stderr)
+            print("  pygcprofiler run --stats-only test.py", file=sys.stderr)
+            sys.exit(2)
+
         # Check if running a module (-m) or a script file
         is_module = args.script == '-m'
         
