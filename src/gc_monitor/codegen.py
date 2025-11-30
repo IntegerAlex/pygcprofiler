@@ -59,7 +59,8 @@ def generate_monitoring_code(**config):
             'terminal_flamegraph_color': {config.get('terminal_flamegraph_color', False)},
             'live_monitoring': {config.get('live_monitoring', False)},
             'live_host': {repr(config.get('live_host', '127.0.0.1'))},
-            'live_port': {config.get('live_port', 8989)}
+            'live_port': {config.get('live_port', 8989)},
+            'enable_prompt': {config.get('enable_prompt', False)}
         }}
 
         print("GMEM Monitoring initialized", file=sys.stderr)

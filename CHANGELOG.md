@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.5] - 2025-11-29
+
+### Added
+
+- **Conditional AI prompt generation**:
+  - Added `--prompt` flag to control when AI optimization prompts are generated and displayed.
+  - Prompts are now hidden by default to keep output clean; use `--prompt` to enable them.
+  - Applies to both `pygcprofiler` and `gc-util.py` commands.
+
+### Fixed
+
+- Fixed flag ordering validation to include `--prompt` flag, ensuring it must appear before the script path.
+- Updated error message examples to include `--prompt` for clarity.
+
 ## [0.3.4] - 2025-11-29
 
 ### Changed
@@ -116,7 +130,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 3. Create git tag: `git tag -s vX.Y.Z -m "Release vX.Y.Z"`
 4. Build and publish: `python -m build && twine upload dist/*`
 
-[Unreleased]: https://github.com/AkshatKotpalliwar/pygcprofiler/compare/v0.3.4...HEAD
+[Unreleased]: https://github.com/AkshatKotpalliwar/pygcprofiler/compare/v0.3.5...HEAD
+[0.3.5]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.3.5
 [0.3.4]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.3.4
 [0.3.3]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.3.3
 [0.3.0]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.3.0

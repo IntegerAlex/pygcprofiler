@@ -68,5 +68,9 @@ Examples:
     run_parser.add_argument('--live-port', type=int, default=8989,
                           help='Port to send live UDP events to (default: 8989)')
     
+    # AI prompt generation
+    run_parser.add_argument('--prompt', action='store_true',
+                          help='Generate and display AI optimization prompt at shutdown')
+    
     return parser.parse_args()
 

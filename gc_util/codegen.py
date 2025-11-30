@@ -17,7 +17,8 @@ def create_monitoring_code(
     terminal_flamegraph_color=False,
     live_monitoring=False,
     live_host='127.0.0.1',
-    live_port=8989
+    live_port=8989,
+    enable_prompt=False
 ):
     """
     Generate the Python code that will be injected to monitor GC events.

@@ -80,6 +80,7 @@ def main():
             "--live",
             "--live-host",
             "--live-port",
+            "--prompt",
         }
         misplaced = []
         for arg in args.script_args:
@@ -96,7 +97,7 @@ def main():
             print("", file=sys.stderr)
             print("Correct examples:", file=sys.stderr)
             print("  pygcprofiler run --live --interval 1.0 test.py --your-script-flag --arg", file=sys.stderr)
-            print("  pygcprofiler run --stats-only test.py", file=sys.stderr)
+            print("  pygcprofiler run --stats-only --prompt test.py", file=sys.stderr)
             sys.exit(2)
 
         # Check if running a module (-m) or a script file
@@ -130,7 +131,8 @@ def main():
             terminal_flamegraph_color=args.terminal_flamegraph_color,
             live_monitoring=args.live,
             live_host=args.live_host,
-            live_port=args.live_port
+            live_port=args.live_port,
+            enable_prompt=getattr(args, 'prompt', False)
         )
 
         # Prepare the command to run Python with our monitoring code

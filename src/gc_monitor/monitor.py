@@ -91,6 +91,7 @@ class GCMonitor:
         self.terminal_flamegraph_width = config.get('terminal_flamegraph_width', 80)
         self.terminal_flamegraph_width = config.get('terminal_flamegraph_width', 80)
         self.terminal_flamegraph_color = config.get('terminal_flamegraph_color', False)
+        self.enable_prompt = config.get('enable_prompt', False)
 
         # Live monitoring setup
         self.udp_emitter = None
@@ -214,21 +215,22 @@ class GCMonitor:
             for rec in recommendations:
                 self.logger._log_message(f"- {rec}")
 
-        # Generate comprehensive AI prompt
-        try:
-            from .prompts import PromptBuilder
-            builder = PromptBuilder(
-                stats=self.stats,
-                events=self._event_buffer,
-                start_time=self.start_time,
-                alert_threshold_ms=self.alert_threshold_ms,
-            )
-            ai_prompt = builder.build()
-            if ai_prompt:
-                self.logger._log_message("\n=== AI OPTIMIZATION PROMPT ===")
-                self.logger._log_message("Copy the following prompt to an AI assistant for expert GC optimization:")
-                self.logger._log_message(ai_prompt)
-        except ImportError:
-            # Prompts module is optional
-            pass
+        # Generate comprehensive AI prompt only if enabled
+        if self.enable_prompt:
+            try:
+                from .prompts import PromptBuilder
+                builder = PromptBuilder(
+                    stats=self.stats,
+                    events=self._event_buffer,
+                    start_time=self.start_time,
+                    alert_threshold_ms=self.alert_threshold_ms,
+                )
+                ai_prompt = builder.build()
+                if ai_prompt:
+                    self.logger._log_message("\n=== AI OPTIMIZATION PROMPT ===")
+                    self.logger._log_message("Copy the following prompt to an AI assistant for expert GC optimization:")
+                    self.logger._log_message(ai_prompt)
+            except ImportError:
+                # Prompts module is optional
+                pass
 

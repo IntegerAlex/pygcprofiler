@@ -138,6 +138,7 @@ Collections by generation:
 | `--terminal-flamegraph-width` | 80 | Width of terminal flame graph |
 | `--terminal-flamegraph-color` | false | Use ANSI colors in flame graph |
 | `--duration-buckets` | 1,5,20,50,100 | GC pause duration buckets (ms) |
+| `--prompt` | false | Generate and display AI optimization prompt at shutdown |
 
 ## 🔧 Programmatic Usage
 
