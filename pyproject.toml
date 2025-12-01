@@ -1,6 +1,6 @@
 [project]
 name = "pygcprofiler"
-version = "0.3.5"
+version = "0.3.6"
 description = "See Python's garbage collector in action without getting in its way. Zero-overhead GC monitoring for production applications."
 readme = "README.md"
 license = "LGPL-2.1-only"
@@ -101,3 +101,8 @@ python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false
+
+[tool.uv.workspace]
+members = [
+    "pygctest",
+]

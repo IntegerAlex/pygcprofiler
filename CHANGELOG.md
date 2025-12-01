@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.6] - 2025-11-29
+
+### Fixed
+
+- Added `enable_prompt` to `GCMonitor.__slots__` to avoid `AttributeError` when using the `--prompt` flag in packaged wheels.
+- Ensured the `--prompt` flag is fully wired through config and only generates AI prompts when explicitly enabled.
+- Updated workspace configuration for `uv` (`[tool.uv.workspace]`) and refreshed documentation references.
+
 ## [0.3.5] - 2025-11-29
 
 ### Added
@@ -129,11 +137,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 2. Update this CHANGELOG with release date
 3. Create git tag: `git tag -s vX.Y.Z -m "Release vX.Y.Z"`
 4. Build and publish: `python -m build && twine upload dist/*`
-
-[Unreleased]: https://github.com/AkshatKotpalliwar/pygcprofiler/compare/v0.3.5...HEAD
-[0.3.5]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.3.5
-[0.3.4]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.3.4
-[0.3.3]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.3.3
-[0.3.0]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.3.0
-[0.1.0]: https://github.com/AkshatKotpalliwar/pygcprofiler/releases/tag/v0.1.0
 

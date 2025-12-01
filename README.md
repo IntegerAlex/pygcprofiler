@@ -42,11 +42,11 @@ pip install -e ".[dev]"
 ### Basic Usage
 
 ```bash
-# Monitor any Python script
-pygcprofiler run your_script.py
+# Monitor any Python script (all pygcprofiler flags must come BEFORE the script)
+pygcprofiler run [pygcprofiler-flags...] your_script.py [script-args...]
 
 # Or use the alias
-gc-monitor run your_script.py
+gc-monitor run [pygcprofiler-flags...] your_script.py [script-args...]
 
 # Pass arguments to your script
 pygcprofiler run server.py --port 8000 --debug
@@ -72,26 +72,26 @@ pygcprofiler run manage.py runserver
 
 ```bash
 # JSON output for log aggregation (ELK, Splunk, etc.)
-pygcprofiler run -m uvicorn main:app --json --log-file gc-events.json
+pygcprofiler run --json --log-file gc-events.json -m uvicorn main:app
 
 # Minimal output, only show summary at shutdown
-pygcprofiler run -m uvicorn main:app --stats-only
+pygcprofiler run --stats-only -m uvicorn main:app
 
 # Custom alert threshold (default: 50ms)
-pygcprofiler run -m uvicorn main:app --alert-threshold-ms 100
+pygcprofiler run --alert-threshold-ms 100 -m uvicorn main:app
 ```
 
 ### Flame Graph Visualization
 
 ```bash
 # ASCII flame graph in terminal
-pygcprofiler run app.py --terminal-flamegraph --terminal-flamegraph-color
+pygcprofiler run --terminal-flamegraph --terminal-flamegraph-color app.py
 
 # Export for external visualization tools
-pygcprofiler run app.py --flamegraph-file gc-flame.txt
+pygcprofiler run --flamegraph-file gc-flame.txt app.py
 
 # Custom bucket size for time grouping
-pygcprofiler run app.py --terminal-flamegraph --flamegraph-bucket 10
+pygcprofiler run --terminal-flamegraph --flamegraph-bucket 10 app.py
 ```
 
 ## 📊 Example Output

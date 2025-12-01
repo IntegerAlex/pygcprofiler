@@ -36,7 +36,7 @@ Example usage:
     monitor.stop_monitoring()
 """
 
-__version__ = "0.3.5"
+__version__ = "0.3.6"
 __author__ = "Akshat Kotpalliwar alias IntegerAlex"
 __license__ = "LGPL-2.1-only"
 

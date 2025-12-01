@@ -64,7 +64,8 @@ class GCMonitor:
         'start_time', 'start_perf', '_stopped', 'interval', 'json_output',
         'stats_only', 'dump_objects', 'dump_garbage', 'alert_threshold_ms',
         'flamegraph_file', 'terminal_flamegraph', 'terminal_flamegraph_width',
-        'terminal_flamegraph_color', 'logger', 'stats', 'flame_renderer',
+        'terminal_flamegraph_color', 'enable_prompt',
+        'logger', 'stats', 'flame_renderer',
         '_original_callbacks', '_collection_starts', '_event_buffer',
         '_config', 'udp_emitter', '_gc_callback'
     )
