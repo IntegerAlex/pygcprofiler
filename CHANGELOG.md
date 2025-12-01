@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-12-01
+
+### Changed
+
+- Bumped minimum supported Python version down to 3.10+ (was 3.12+) and updated tooling configuration (`ruff`, `mypy`) accordingly.
+- Documented deprecation of programmatic usage (`GCMonitor`, `GCStatistics`, `GCLogger`) and added LSP-visible `deprecated` annotations for these classes.
+- Declared `typing-extensions` as a runtime dependency to support the deprecation annotations on all supported Python versions.
+
 ## [0.3.6] - 2025-11-29
 
 ### Fixed
@@ -118,7 +126,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - No background threads introduced
 
 ### Technical Details
-- Requires Python 3.12+
+- Requires Python 3.10+
 - Depends on `psutil` for memory measurement (optional, graceful fallback)
 - Events stored as lightweight tuples to minimize object creation
 - Lazy initialization of logging/stats components

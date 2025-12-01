@@ -1,10 +1,10 @@
 [project]
 name = "pygcprofiler"
-version = "0.3.6"
+version = "0.4.0"
 description = "See Python's garbage collector in action without getting in its way. Zero-overhead GC monitoring for production applications."
 readme = "README.md"
 license = "LGPL-2.1-only"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 authors = [
     { name = "Akshat Kotpalliwar" , email = "akshatkot@gmail.com" }
 ]
@@ -28,6 +28,8 @@ classifiers = [
     "License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Debuggers",
@@ -37,6 +39,7 @@ classifiers = [
 ]
 dependencies = [
     "psutil>=5.9.0",
+    "typing-extensions>=4.8.0",
 ]
 
 [project.optional-dependencies]
@@ -45,6 +48,7 @@ dev = [
     "pytest-cov>=4.0.0",
     "ruff>=0.4.0",
     "mypy>=1.10.0",
+    "typing-extensions>=4.8.0", 
 ]
 dashboard = [
     "fastapi>=0.104.0",
@@ -90,14 +94,14 @@ asyncio_mode = "auto"
 
 [tool.ruff]
 line-length = 120
-target-version = "py312"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM"]
 ignore = ["E501"]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false

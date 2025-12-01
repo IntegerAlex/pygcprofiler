@@ -30,6 +30,8 @@ import os
 import sys
 from collections import defaultdict
 
+from typing_extensions import deprecated
+
 from .logging import GCLogger
 from .stats import GCStatistics
 from .flamegraph import FlameGraphRenderer
@@ -39,7 +41,10 @@ from .processing import process_buffered_events, generate_final_output
 from .utils import take_snapshot, dump_objects
 from .blunders import detect_gc_blunders
 
-
+@deprecated(
+    "Programmatic use of pygcprofiler (GCMonitor) is deprecated. "
+    "Please use the CLI entrypoint `pygcprofiler run ...` instead."
+)
 class GCMonitor:
     """
     Main GC monitoring class - Zero Runtime Interference Design

@@ -20,7 +20,13 @@ import datetime
 import json
 import sys
 
+from typing_extensions import deprecated
 
+
+@deprecated(
+    "Programmatic use of pygcprofiler (GCLogger) is deprecated. "
+    "Please use the CLI entrypoint `pygcprofiler run ...` instead."
+)
 class GCLogger:
     """Handles logging for GC monitoring events"""
 

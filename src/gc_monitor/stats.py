@@ -20,7 +20,13 @@ import math
 import time
 from collections import defaultdict, deque
 
+from typing_extensions import deprecated
 
+
+@deprecated(
+    "Programmatic use of pygcprofiler (GCStatistics) is deprecated. "
+    "Please use the CLI entrypoint `pygcprofiler run ...` instead."
+)
 class GCStatistics:
     """Handles GC statistics calculation and threshold recommendations"""
 

@@ -4,7 +4,7 @@
 [![PyPI downloads](https://img.shields.io/pypi/dm/pygcprofiler.svg)](https://pypi.org/project/pygcprofiler/)
 [![PyPI - Monthly Downloads](https://img.shields.io/pypi/dm/pygcprofiler?label=downloads%2Fmonth)](https://pypi.org/project/pygcprofiler/)
 [![License: LGPL v2.1](https://img.shields.io/badge/License-LGPL_v2.1-blue.svg)](https://www.gnu.org/licenses/lgpl-2.1)
-[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![GitHub stars](https://img.shields.io/github/stars/IntegerAlex/pygcprofiler.svg?style=social&label=Star)](https://github.com/IntegerAlex/pygcprofiler)
 [![GitHub forks](https://img.shields.io/github/forks/IntegerAlex/pygcprofiler.svg?style=social&label=Fork)](https://github.com/IntegerAlex/pygcprofiler)
 [![GitHub issues](https://img.shields.io/github/issues/IntegerAlex/pygcprofiler.svg)](https://github.com/IntegerAlex/pygcprofiler/issues)
@@ -35,7 +35,7 @@ pip install -e .
 pip install -e ".[dev]"
 ```
 
-**Requirements:** Python 3.12+ and `psutil` (installed automatically)
+**Requirements:** Python 3.10+ and `psutil` (installed automatically)
 
 ## 🚀 Quick Start
 
@@ -140,24 +140,15 @@ Collections by generation:
 | `--duration-buckets` | 1,5,20,50,100 | GC pause duration buckets (ms) |
 | `--prompt` | false | Generate and display AI optimization prompt at shutdown |
 
-## 🔧 Programmatic Usage
+## 🔧 Programmatic Usage (Deprecated)
 
-You can also use pygcprofiler as a library:
+Programmatic use of `pygcprofiler` (importing `GCMonitor`, `GCStatistics`, or `GCLogger` from `gc_monitor`) is **deprecated**.
+Most Python language servers (Pyright, Pylance, etc.) will now surface deprecation warnings when you import or instantiate these classes.
+Please prefer the CLI entrypoints instead:
 
-```python
-from gc_monitor.monitor import GCMonitor
-
-# Start monitoring
-monitor = GCMonitor(
-    alert_threshold_ms=100.0,
-    stats_only=True
-)
-
-# Your application code here
-run_my_application()
-
-# Stop and get results
-monitor.stop_monitoring()
+```bash
+pygcprofiler run your_script.py
+gc-monitor run -m uvicorn main:app
 ```
 
 ## 🎯 Design Principles
