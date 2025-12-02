@@ -76,15 +76,22 @@ def generate_final_output(monitor):
         flame_output = monitor.flame_renderer.render_terminal_flamegraph(monitor.start_time)
         if isinstance(flame_output, list):
             for line_info in flame_output:
-                if line_info[0] == 'colored':
-                    _, plain_line, colored_line = line_info
-                    print(colored_line, file=sys.stderr)
-                    if monitor.logger.log_handle:
-                        monitor.logger.log_handle.write(plain_line + '\n')
-                        monitor.logger.log_handle.flush()
+                # `render_terminal_flamegraph` can return both raw strings and
+                # tagged tuples like ('plain', line) or ('colored', plain, colored).
+                if isinstance(line_info, tuple):
+                    tag = line_info[0]
+                    if tag == 'colored':
+                        _, plain_line, colored_line = line_info
+                        print(colored_line, file=sys.stderr)
+                        if monitor.logger.log_handle:
+                            monitor.logger.log_handle.write(plain_line + '\n')
+                            monitor.logger.log_handle.flush()
+                    else:
+                        _, plain_line = line_info
+                        monitor.logger._log_message(plain_line)
                 else:
-                    _, plain_line = line_info
-                    monitor.logger._log_message(plain_line)
+                    # Simple string line
+                    monitor.logger._log_message(line_info)
         else:
             monitor.logger._log_message(flame_output)
 
