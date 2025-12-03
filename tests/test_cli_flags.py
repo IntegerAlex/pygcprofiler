@@ -174,3 +174,41 @@ def test_pygcprofiler_module_mode_with_pygctest():
     assert "Hello from pygctest!" in result.stdout or "Hello from pygctest!" in result.stderr
 
 
+def test_pygcprofiler_module_mode_with_live_flag():
+    """Verify that --live flag works with module-mode (-m)."""
+    env = os.environ.copy()
+    # Ensure both src/ and pygctest/ are in PYTHONPATH so modules are importable
+    src_path = str(PROJECT_ROOT / "src")
+    pygctest_path = str(PROJECT_ROOT)
+    env["PYTHONPATH"] = os.pathsep.join([src_path, pygctest_path, env.get("PYTHONPATH", "")])
+
+    # Test --live with module mode: pygcprofiler run --live -m module
+    cmd = [
+        sys.executable,
+        "-m",
+        "gc_monitor",
+        "run",
+        "--live",
+        "-m",
+        TEST_MODULE,
+    ]
+
+    result = subprocess.run(
+        cmd,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        timeout=30,  # Prevent hanging (dashboard auto-start might take a moment)
+    )
+
+    assert result.returncode == 0, f"Module-mode with --live failed: {cmd}\nstderr:\n{result.stderr}\nstdout:\n{result.stdout}"
+    assert "pygcprofiler - See Python's garbage collector in action without getting in its way." in result.stderr
+    assert "Traceback (most recent call last)" not in result.stderr
+    # Verify live monitoring was enabled (dashboard auto-starts)
+    assert "GMEM Dashboard auto-started" in result.stderr or "live monitoring" in result.stderr.lower()
+    # Verify the module actually ran
+    assert "Hello from pygctest!" in result.stdout or "Hello from pygctest!" in result.stderr
+
+

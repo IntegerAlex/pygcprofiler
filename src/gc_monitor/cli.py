@@ -89,11 +89,17 @@ Examples:
     run_parser.add_argument('--prompt', action='store_true',
                           help='Generate and display AI optimization prompt at shutdown')
 
-    # Handle -m module mode specially: if we see "run -m" in sys.argv, insert -- before -m
-    # This allows: pygcprofiler run -m uvicorn app:app (without requiring --)
-    if len(sys.argv) > 2 and sys.argv[1] == 'run' and sys.argv[2] == '-m':
-        # Insert -- before -m to tell argparse to treat it as a positional argument
-        sys.argv.insert(2, '--')
+    # Handle -m module mode specially: if we see "-m" after "run" (possibly with flags in between),
+    # insert -- before -m to tell argparse to treat it as a positional argument.
+    # This allows: pygcprofiler run -m uvicorn app:app
+    # and also: pygcprofiler run --live -m uvicorn app:app
+    if len(sys.argv) > 2 and sys.argv[1] == 'run':
+        # Find the position of -m in the arguments after 'run'
+        for i in range(2, len(sys.argv)):
+            if sys.argv[i] == '-m':
+                # Insert -- before -m
+                sys.argv.insert(i, '--')
+                break
     
     return parser.parse_args()
 
