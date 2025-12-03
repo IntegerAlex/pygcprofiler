@@ -82,14 +82,14 @@ def generate_final_output(monitor):
                     tag = line_info[0]
                     if tag == 'colored':
                         _, plain_line, colored_line = line_info
-                        print(colored_line, file=sys.stderr)
-                        if monitor.logger.log_handle:
-                            monitor.logger.log_handle.write(plain_line + '\n')
-                            monitor.logger.log_handle.flush()
-                    else:
-                        _, plain_line = line_info
-                        monitor.logger._log_message(plain_line)
+                    print(colored_line, file=sys.stderr)
+                    if monitor.logger.log_handle:
+                        monitor.logger.log_handle.write(plain_line + '\n')
+                        monitor.logger.log_handle.flush()
                 else:
+                    _, plain_line = line_info
+                    monitor.logger._log_message(plain_line)
+            else:
                     # Simple string line
                     monitor.logger._log_message(line_info)
         else:

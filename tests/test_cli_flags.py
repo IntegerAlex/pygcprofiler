@@ -1,4 +1,5 @@
 import os
+import shutil
 import sys
 import subprocess
 from pathlib import Path
@@ -9,6 +10,7 @@ import pytest
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 GC_UTIL = PROJECT_ROOT / "gc-util.py"
 TEST_SCRIPT = PROJECT_ROOT / "test.py"
+TEST_MODULE = "pygctest.main"
 
 
 @pytest.mark.parametrize(
@@ -134,5 +136,41 @@ def test_gc_util_misplaced_flags_error():
     result = _run_gc_util(["run", str(TEST_SCRIPT), "--json"])
     assert result.returncode == 2
     assert "Error: gc-util/pygcprofiler flags must appear before the script path." in result.stderr
+
+
+def test_pygcprofiler_module_mode_with_pygctest():
+    """Verify that module-mode (-m) works when using the pygcprofiler CLI (via gc_monitor.__main__)."""
+    env = os.environ.copy()
+    # Ensure both src/ and pygctest/ are in PYTHONPATH so modules are importable
+    src_path = str(PROJECT_ROOT / "src")
+    pygctest_path = str(PROJECT_ROOT)
+    env["PYTHONPATH"] = os.pathsep.join([src_path, pygctest_path, env.get("PYTHONPATH", "")])
+
+    # Test module mode without requiring -- separator
+    # The CLI should handle -m automatically
+    cmd = [
+        sys.executable,
+        "-m",
+        "gc_monitor",
+        "run",
+        "-m",
+        TEST_MODULE,
+    ]
+
+    result = subprocess.run(
+        cmd,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        timeout=30,  # Prevent hanging
+    )
+
+    assert result.returncode == 0, f"Module-mode run failed: {cmd}\nstderr:\n{result.stderr}\nstdout:\n{result.stdout}"
+    assert "pygcprofiler - See Python's garbage collector in action without getting in its way." in result.stderr
+    assert "Traceback (most recent call last)" not in result.stderr
+    # Verify the module actually ran
+    assert "Hello from pygctest!" in result.stdout or "Hello from pygctest!" in result.stderr
 
 
