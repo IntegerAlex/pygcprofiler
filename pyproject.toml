@@ -1,6 +1,6 @@
 [project]
 name = "pygcprofiler"
-version = "0.4.0"
+version = "0.4.1"
 description = "See Python's garbage collector in action without getting in its way. Zero-overhead GC monitoring for production applications."
 readme = "README.md"
 license = "LGPL-2.1-only"

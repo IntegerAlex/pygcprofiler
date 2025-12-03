@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2025-12-01
+
+### Fixed
+
+- Fixed module mode (`-m`) support to work with flags like `--live`, `--json`, etc. Previously required `--` separator.
+- Fixed indentation error in terminal flamegraph handling that caused syntax errors.
+- Improved CLI argument parsing to automatically handle `-m` flag without requiring manual `--` separator.
+
+### Added
+
+- Comprehensive CLI flag test suite covering all monitoring options and flag combinations.
+- Test for module mode (`-m`) with various flag combinations including `--live`.
+- `pygctest` package for testing module-mode functionality.
+
 ## [0.4.0] - 2025-12-01
 
 ### Changed
