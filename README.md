@@ -12,6 +12,8 @@
 
 **See Python's garbage collector in action without getting in its way.**
 
+**NOT MAINTAINED**
+
 A zero-overhead GC monitoring tool designed for production applications. Monitor garbage collection events, identify performance bottlenecks, and get actionable optimization recommendations—all without affecting your application's behavior.
 
 ## ✨ Key Features
